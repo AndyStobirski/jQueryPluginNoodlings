@@ -1,0 +1,62 @@
+//http://stackoverflow.com/questions/12880256/jquery-plugin-creation-and-public-facing-methods
+
+// plugin example
+(function($){
+    // custom select class
+    function simpleTags(item, options) {
+		
+		console.log (item);
+		console.log (options);
+		
+
+		console.log ( this.options );
+		
+        this.item = $(item);
+				
+        this.init();
+    }
+
+	var options;
+	var defaults = [];
+	var $container_element;
+	
+	
+    simpleTags.prototype = {
+        init: function() {			
+			$container_element =  this.item;
+            $container_element.html("foobar");
+        },
+        resetOpacity: function() {
+            this.setOpacity('');
+        },
+        setOpacity: function(opacity) {
+			//console.log("kkk");
+            this.item.css({opacity:opacity});
+        }
+    }
+
+    // jQuery plugin interface
+    $.fn.simpleTags = function(opt) {
+        // slice arguments to leave only arguments after function name
+		//console.log(arguments);
+        var args = Array.prototype.slice.call(arguments, 1);
+		//console.log (args);
+        return this.each(function() {
+            var item = $(this), instance = item.data('simpleTags');
+            if(!instance) {
+                // create plugin instance and save it in data
+                item.data('simpleTags', new simpleTags(this, opt));
+            } else {
+                // if instance already created call method
+                if(typeof opt === 'string') {
+					//console.log ("aa")
+					//console.log(opt);
+					//console.log(instance);
+					//console.log(args);
+                    instance[opt].apply(instance, args);
+                }
+            }
+        });
+    }
+
+}(jQuery));
